@@ -5,7 +5,7 @@ from multiprocessing import Pool, cpu_count
 import xmlrpc.client
 
 base_url = "https://pypi.org/simple/"
-mirror_dir = '/content/pypi_mirror'
+mirror_dir = 'pypi_mirror'
 last_serial_path = os.path.join(mirror_dir, "last_serial.txt")
 client = xmlrpc.client.ServerProxy('https://pypi.org/pypi')
 
@@ -31,6 +31,7 @@ def fetch_package_index(args):
         os.makedirs(package_dir, exist_ok=True)
         with open(os.path.join(package_dir, "index.html"), "w", encoding="utf-8") as f:
             f.write(response.text)
+            print(f"Updated {package_name}")
 
     except requests.exceptions.RequestException as e:
         print(f"Error fetching index for {package_name}: {e}")
@@ -121,7 +122,7 @@ def initialize_mirror(local_index_path):
     tasks_arg = [(base_url, package, mirror_dir) for package in new_packages]
 
     if tasks_arg:
-        print(f"Found {len(tasks_arg)} packages to update")
+        print(f"Found {len(tasks_arg):,} packages to update")
         num_workers = min(cpu_count(), len(tasks_arg))
         with Pool(num_workers) as pool:
             pool.map(fetch_package_index, tasks_arg)
