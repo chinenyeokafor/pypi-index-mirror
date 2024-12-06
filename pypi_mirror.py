@@ -1,9 +1,8 @@
 import os
 import requests
-import hashlib
 from bs4 import BeautifulSoup
 from multiprocessing import Pool, cpu_count
-import xmlrpc
+import xmlrpc.client
 
 base_url = "https://pypi.org/simple/"
 mirror_dir = '/content/pypi_mirror'
