@@ -5,10 +5,11 @@ import hashlib
 
 mirror_dir = 'pypi_mirror'
 
-HASH_ALGORITHM = "sha256"
+HASH_ALGORITHM = "blake2b"
+HASH_LENGTH = 32
 
 def digest(to_hash:bytes) -> bytes:
-        return hashlib.sha256(to_hash).hexdigest()
+        return hashlib.blake2b(to_hash, digest_size=HASH_LENGTH).hexdigest()
 
 def compute_hash_and_length(file_path):
     try:
@@ -37,7 +38,7 @@ def generate_all_csv(mirror_dir, output_csv):
                 rows.append({
                     'path': relative_path,
                     'length': file_length,
-                    'hash_algorithm': f'{HASH_ALGORITHM}',
+                    'hash_algorithm': f'{HASH_ALGORITHM}-{HASH_LENGTH}',
                     'hash': file_hash
                 })
 

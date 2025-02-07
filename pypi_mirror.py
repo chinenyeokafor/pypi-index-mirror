@@ -72,7 +72,7 @@ def update_mirror():
 
     current_serial = client.changelog_last_serial()
 
-    pkgs_to_download, pkgs_to_remove = get_changes(serial, current_serial)
+    pkgs_to_download, pkgs_to_remove, last_serial = get_changes(serial, current_serial)
 
     print(f"Removing {len(pkgs_to_remove)}, Adding {len(pkgs_to_download)} pkgs" )
 
@@ -88,7 +88,7 @@ def update_mirror():
         send_remove_requests(removed_artifacts)
     
     with open(last_serial_path, 'w') as f:
-        f.write(f"Last Serial: {serial}")
+        f.write(f"Last Serial: {last_serial}")
 
 
 def get_changes(serial, current_serial):
@@ -117,7 +117,7 @@ def get_changes(serial, current_serial):
 
         serial = changes[-1][-1]
 
-    return packages_to_download, packages_to_remove
+    return packages_to_download, packages_to_remove, serial
 
 
 def handle_removals(packages):
@@ -148,7 +148,7 @@ def main():
     needs_initialization = (
         not os.path.exists(local_index_path)
         or not os.path.exists(last_serial_path)
-        or not are_all_pkgs_downloaded(local_index_path)
+        # or not are_all_pkgs_downloaded(local_index_path)
     )
 
     if needs_initialization:
