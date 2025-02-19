@@ -1,7 +1,12 @@
 import requests
 import json
+import configparser
+import os
 
-RSTUF_API_BASE_URL = "http://rstuf.local/api/v1"
+config = configparser.ConfigParser()
+config.read(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'config', 'config.ini'))
+
+RSTUF_API_BASE_URL = config.get("settings", "RSTUF_API_BASE_URL")
 ARTIFACTS_ADD_URL = f"{RSTUF_API_BASE_URL}/artifacts"
 ARTIFACTS_DELETE_URL = f"{RSTUF_API_BASE_URL}/artifacts/delete"
 

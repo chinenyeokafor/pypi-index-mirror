@@ -22,6 +22,11 @@ def download_root_index():
         print("Failed to fetch the PyPI simple index.")
         return None
 
+def update_root_index(local_index_path, root_index):
+    os.makedirs(os.path.dirname(local_index_path), exist_ok=True)
+    with open(local_index_path, "w", encoding="utf-8") as f:
+        f.write(root_index)
+
 def fetch_package_index(args):
     """download from pypi and save the index for an individual package"""
     base_url, package_name, mirror_dir = args
@@ -60,7 +65,7 @@ def are_all_pkgs_downloaded(local_index_path):
     return packages_to_download == local_packages
 
 
-def update_mirror():
+def update_mirror(local_index_path):
     """
     Handles changelog events as follows:
     - 'new', 'add', 'create', 'update', 'docupdate': Downloads/updates the pkg
@@ -80,7 +85,7 @@ def update_mirror():
     handle_downloads(pkgs_to_download)
     
     if pkgs_to_download:
-        artifacts_metadata = generate_updated_csv(pkgs_to_download, os.path.join(mirror_dir, 'mirror_metadata.csv'))
+        artifacts_metadata = generate_updated_csv(pkgs_to_download)
         send_add_requests(artifacts_metadata)
     
     if pkgs_to_remove:
@@ -89,7 +94,9 @@ def update_mirror():
     
     with open(last_serial_path, 'w') as f:
         f.write(f"Last Serial: {last_serial}")
-
+    
+    #update root index
+    update_root_index(local_index_path, download_root_index())
 
 def get_changes(serial, current_serial):
     """Process changelog entries and categorize packages by events
@@ -156,7 +163,7 @@ def main():
         initialize_mirror(local_index_path)
     else:
         print("Updating local mirror...")
-        update_mirror()
+        update_mirror(local_index_path)
 
 
 def initialize_mirror(local_index_path):
@@ -167,9 +174,7 @@ def initialize_mirror(local_index_path):
         root_index = download_root_index()
         if root_index is None:
             return
-        os.makedirs(os.path.dirname(local_index_path), exist_ok=True)
-        with open(local_index_path, "w", encoding="utf-8") as f:
-            f.write(root_index)
+        update_root_index(local_index_path, root_index)
     else:
         serial = None
         with open(local_index_path, "r", encoding="utf-8") as f:
