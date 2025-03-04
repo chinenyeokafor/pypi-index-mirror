@@ -1,6 +1,6 @@
 # PyPI Mirror Update
 
-This project helps maintain a local mirror of packages from PyPI, which is then synchronized with RSTUF (<rstuf url>). The process involves an initial synchronization of the mirror, followed by the generation of a CSV file that is used for the initial RSTUF bootstrapping. The generated CSV contains metadata about the packages in the PyPI mirror directory, such as the relative path, length, hash algorithm, and hash.
+This project helps maintain a local mirror of packages from PyPI, which is then synchronized with RSTUF following the [Repository Service for TUF Guide](https://repository-service-tuf.readthedocs.io/en/stable/guide/general/usage.html). The process involves an initial synchronization of the mirror, followed by the generation of a CSV file that is used for the initial RSTUF bootstrapping. The generated CSV contains metadata about the packages in the PyPI mirror directory, such as the relative path, length, hash algorithm, and hash.
 
 ## Initial Bootstrapping
 
