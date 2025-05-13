@@ -85,7 +85,7 @@ def main():
     needs_initialization = (
         not os.path.exists(local_index_path)
         or not os.path.exists(last_serial_path)
-        or not are_all_pkgs_downloaded(local_index_path)
+        #or not are_all_pkgs_downloaded(local_index_path)
     )
 
     if needs_initialization:
